@@ -4,6 +4,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -28,9 +29,11 @@ func (fut *Future) Get() (interface{}, error) {
 		return nil, fut.Err
 	}
 
-	result := <-fut.Chan
+	result, ok := <-fut.Chan
+	if !ok {
+		return nil, errors.New("Future already closed")
+	}
 	close(fut.Chan)
-
 	return result, nil
 }
 
@@ -38,7 +41,7 @@ func (fut *Future) Get() (interface{}, error) {
 func work(i int) Future {
 	result := NewFuture()
 	go func() {
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 
 		result.Chan <- fmt.Sprintf("Hello World %d", i)
 	}()
@@ -66,4 +69,10 @@ func main() {
 		}
 	}
 	log.Print("All work finished...")
+
+	// reading from closed future returns error
+	_, err := futs[0].Get()
+	if err != nil {
+		log.Printf("Error getting closed future: %s", err)
+	}
 }
