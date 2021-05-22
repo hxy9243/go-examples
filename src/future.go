@@ -71,6 +71,7 @@ func main() {
 	log.Print("All work finished...")
 
 	// reading from closed future returns error
+	log.Print("Below is an expected error:")
 	_, err := futs[0].Get()
 	if err != nil {
 		log.Printf("Error getting closed future: %s", err)
