@@ -22,9 +22,8 @@ func workload(ctx context.Context) error {
 			// to avoid resource leaks
 			t.Stop()
 
-			return errors.New("user cancelled")
+			return errors.New("Context cancelled, stopping..")
 		}
-
 	}
 }
 
