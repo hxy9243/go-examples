@@ -20,7 +20,6 @@ func workload(ctx context.Context) error {
 
 			// when handling cancel signals, remember to properly close resources
 			// to avoid resource leaks
-			t.Stop()
 
 			return errors.New("Context cancelled, stopping..")
 		}
